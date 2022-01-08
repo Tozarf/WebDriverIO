@@ -22,7 +22,16 @@ exports.config = {
     //
     specs: ["./tests/**.js"],
     // Patterns to exclude.
-    exclude: ["./tests/example.test.js"],
+    exclude: [
+        "./tests/example.test.js",
+        "./tests/actions.test.js",
+        "./tests/e2e-login.test.js",
+        "./tests/e2e-feedback.test.js",
+        "./tests/e2e-search.test.js",
+        "./tests/e2e-exchange.test.js",
+        "./tests/e2e-payment.test.js",
+        "./tests/e2e-transaction.test.js",
+    ],
     //
     // ============
     // Capabilities
