@@ -1,6 +1,8 @@
+import App from "../page-objects/App";
+
 describe("E2E - FEEDBACK", () => {
     it("should load feedback form", async () => {
-        browser.url("http://zero.webappsecurity.com/");
+        App.openHomepage();
         await $("#feedback").waitForExist();
         await $("#feedback").click();
         await $("form").waitForExist();
