@@ -1,13 +1,14 @@
+import App from "../page-objects/App";
+import Navbar from "../page-objects/components/Navbar";
+
 describe("E2E Tests - Search", () => {
     it("Should load homepage", async () => {
-        browser.url("http://zero.webappsecurity.com/index.html");
-        await $("#searchTerm").waitForExist();
+        App.openHomepage();
     });
     it("Should submit searchbox", async () => {
-        await $("#searchTerm").setValue("bank");
-        browser.keys("Enter");
-        const resultsTitle = $("h2");
+        Navbar.search("bank");
 
+        const resultsTitle = $("h2");
         await resultsTitle.waitForExist();
         await expect(resultsTitle).toHaveText("Search Results:");
     });

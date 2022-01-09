@@ -1,32 +1,28 @@
+import App from "../page-objects/App";
+import Navbar from "../page-objects/components/Navbar";
+import LoginPage from "../page-objects/pages/LoginPage";
+import PayBillsPage from "../page-objects/pages/PayBillsPage";
+
 describe("E2E Test - Currency Exchange", () => {
     it("should log into application", async () => {
-        browser.url("http://zero.webappsecurity.com/");
-
-        await $("#signin_button").waitForExist();
-        await $("#signin_button").click();
-
-        await $("#login_form").waitForExist();
-        await $("#user_login").setValue("username");
-
-        await $("#user_password").setValue("password");
-
-        await $("input[type='submit']").click();
+        App.openLoginPage();
+        await LoginPage.formIsVisible();
+        await LoginPage.fillForm("username", "password");
+        await LoginPage.submitForm();
+        await Navbar.insideNavbarIsVisible();
     });
     it("should make currency exchange", async () => {
-        await $("#pay_bills_tab").waitForExist();
-        await $("#pay_bills_tab").click();
-        await $("#tabs > ul > li:nth-child(3) > a").waitForExist();
-        await $("#tabs > ul > li:nth-child(3) > a").click();
-        const currencySelect = $("#pc_currency");
+        await PayBillsPage.clickOnPayBills();
+        await PayBillsPage.clickOnPurchaseForeignCurrency();
+        const currencySelect = await PayBillsPage.currencySelect;
         await currencySelect.waitForExist();
-        currencySelect.selectByAttribute("value", "GBP");
-        await $("#pc_amount").setValue("500");
-        await $("#pc_inDollars_true").click();
-        await $("#purchase_cash").click();
-        const message = $("#alert_content");
+        await currencySelect.selectByAttribute("value", "GBP");
+        await PayBillsPage.setAmount("233");
+        await PayBillsPage.clickOnDollars();
+        await PayBillsPage.clickOnPurchaseButton();
 
-        await expect(message).toBeDisplayed();
-        await expect(message).toHaveText(
+        await expect(PayBillsPage.message).toBeDisplayed();
+        await expect(PayBillsPage.message).toHaveText(
             "Foreign currency cash was successfully purchased."
         );
     });

@@ -1,26 +1,22 @@
+import App from "../page-objects/App";
+import Navbar from "../page-objects/components/Navbar";
+import HelpPage from "../page-objects/pages/HelpPage";
+import LoginPage from "../page-objects/pages/LoginPage";
+
 describe("E2E - Help", () => {
     it("should login into the application", async () => {
-        browser.url("http://zero.webappsecurity.com/");
-
-        await $("#signin_button").waitForExist();
-        await $("#signin_button").click();
-
-        await $("#login_form").waitForExist();
-        await $("#user_login").setValue("username");
-
-        await $("#user_password").setValue("password");
-
-        await $("input[type='submit']").click();
+        App.openLoginPage();
+        await LoginPage.login("username", "password");
+        await Navbar.insideNavbarIsVisible();
     });
     it("should display correctly the HELP section", async () => {
-        await $(".icon-cog").click();
-        await $("#help_link").waitForExist();
-        await $("#help_link").click();
-        const title = $(".span8 > h3");
+        await Navbar.clickSettings();
+        await Navbar.clickHelp();
+        const title = HelpPage.title;
         await expect(title).toHaveText("How do I log into my account?");
-        await $("*=transfer funds").click();
+        await HelpPage.clickOnTransFunds();
         await expect(title).toHaveText("How do I transfer funds?");
-        await $("*=pay bills").click();
+        await HelpPage.clickOnPayBills();
         await expect(title).toHaveText("How do I pay bills?");
     });
 });

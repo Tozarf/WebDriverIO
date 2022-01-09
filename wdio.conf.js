@@ -1,3 +1,5 @@
+const { default: config } = require("./lib/config");
+
 exports.config = {
     //
     // ====================
@@ -20,7 +22,7 @@ exports.config = {
     // then the current working directory is where your `package.json` resides, so `wdio`
     // will be called from there.
     //
-    specs: ["./tests/e2e-login.test.js"],
+    specs: ["./tests/e2e-payment.test.js"],
     // Patterns to exclude.
     exclude: [],
     //
@@ -39,7 +41,7 @@ exports.config = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    maxInstances: config.maxInstance,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -52,7 +54,7 @@ exports.config = {
             // 5 instances get started at a time.
             maxInstances: 5,
             //
-            browserName: "chrome",
+            browserName: config.browser,
             acceptInsecureCerts: true,
             // If outputDir is provided WebdriverIO can capture driver session logs
             // it is possible to configure which logTypes to include/exclude.
@@ -67,7 +69,7 @@ exports.config = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: "info",
+    logLevel: config.logLevel,
     //
     // Set specific log levels per logger
     // loggers:
@@ -85,16 +87,16 @@ exports.config = {
     //
     // If you only want to run your tests until a specific amount of tests have failed use
     // bail (default is 0 - don't bail, run all tests).
-    bail: 0,
+    bail: config.bail,
     //
     // Set a base URL in order to shorten url command calls. If your `url` parameter starts
     // with `/`, the base url gets prepended, not including the path portion of your baseUrl.
     // If your `url` parameter starts without a scheme or `/` (like `some/path`), the base url
     // gets prepended directly.
-    baseUrl: "http://localhost",
+    baseUrl: config.baseUrl,
     //
     // Default timeout for all waitFor* commands.
-    waitforTimeout: 10000,
+    waitforTimeout: config.timeout,
     //
     // Default timeout in milliseconds for request
     // if browser driver or grid doesn't send response
@@ -139,6 +141,17 @@ exports.config = {
         ui: "bdd",
         timeout: 60000,
         require: ["@babel/register"],
+    },
+
+    before: function (capabilities, specs) {
+        require("@babel/register");
+
+        browser.addCommand("waitAndClick", async function (selector) {
+            try {
+                await $(selector).waitForExist();
+                await $(selector).click();
+            } catch (error) {}
+        });
     },
     //
     // =====

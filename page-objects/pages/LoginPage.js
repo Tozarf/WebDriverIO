@@ -13,6 +13,9 @@ class LoginPage extends Base {
     get submitButton() {
         return $("input[type='submit']");
     }
+    get error() {
+        return $(".alert.alert-error");
+    }
 
     async formIsVisible() {
         await this.loginForm.waitForExist();
@@ -21,7 +24,14 @@ class LoginPage extends Base {
         await this.userNameInput.setValue(username);
         await this.passwordInput.setValue(password);
     }
+
     async submitForm() {
+        await this.submitButton.click();
+    }
+    async login(username, password) {
+        await this.loginForm.waitForExist();
+        await this.userNameInput.setValue(username);
+        await this.passwordInput.setValue(password);
         await this.submitButton.click();
     }
 }
